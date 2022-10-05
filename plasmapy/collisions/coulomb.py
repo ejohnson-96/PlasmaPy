@@ -56,14 +56,34 @@ from plasmapy.utils.decorators import validate_quantities
 
 )
 def Coulomb_number(
-
+        r: u.m,
+        v: u.m / u.s,
+        tc: u.s,
 ):
     r"""
-    Calculate the Coulomb number presented in :cite:t:`verscharen:2019`
+    Calculate the Coulomb number presented in :cite:t:`verscharen:2019`.
 
+    Parameters
+    ----------
+    r : `~astropy.units.Quantity`
+        Radial distance in units of meters or comparable distance unit.
+
+    v : `~astropy.units.Quantity`
+        Bulk velocity in units of meters per second.
+
+    tc : `~astropy.units.Quantity`
+        The collisional timescale in units of seconds.
+
+    Returns
+    -------
+    Nc : `float`
+        The dimensionless Coulomb number.
 
 
     """
+
+
+
 
     return
 
@@ -204,7 +224,7 @@ def Coulomb_logarithm(
     impact parameter and the outer impact parameter, respectively, for
     Coulomb collisions :cite:p:`spitzer:1962`\ ; :math:`b_{min}` and
     :math:`b_{max}` are each computed by
-    `~plasmapy.formulary.collisions.impact_parameter`.
+    `~plasmapy.collisions.lengths.impact_parameter`.
 
     The abbreviations of Options 2–7 (``"GMS-..."``) refer to the first
     initials of the three authors of :cite:t:`gericke:2002`.
@@ -472,7 +492,7 @@ def Coulomb_logarithm(
 
     See Also
     --------
-    ~plasmapy.formulary.collisions.impact_parameter : Computes
+    ~plasmapy.collisions.lengths.impact_parameter : Computes
         :math:`b_{min}` and :math:`b_{max}`.
     """
     # fetching impact min and max impact parameters
