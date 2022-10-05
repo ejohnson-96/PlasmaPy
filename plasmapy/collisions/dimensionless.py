@@ -8,8 +8,11 @@ from plasmapy import particles
 from plasmapy.collisions.lengths import mean_free_path
 from plasmapy.collisions.misc import _process_inputs
 from plasmapy.formulary.mathematics import Fermi_integral
-from plasmapy.formulary.quantum import chemical_potential, \
-    thermal_deBroglie_wavelength, Wigner_Seitz_radius
+from plasmapy.formulary.quantum import (
+    chemical_potential,
+    thermal_deBroglie_wavelength,
+    Wigner_Seitz_radius,
+)
 from plasmapy.utils.decorators import validate_quantities
 
 

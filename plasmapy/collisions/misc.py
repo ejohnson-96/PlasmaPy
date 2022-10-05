@@ -2,13 +2,11 @@ import astropy.units as u
 import numpy as np
 
 from astropy.constants.si import e
-
 from numbers import Real
 
-from plasmapy import particles
-from plasmapy import utils
-from plasmapy.formulary.speeds import thermal_speed
+from plasmapy import particles, utils
 from plasmapy.collisions.frequencies import collision_frequency
+from plasmapy.formulary.speeds import thermal_speed
 from plasmapy.utils.decorators import validate_quantities
 from plasmapy.utils.decorators.checks import _check_relativistic
 

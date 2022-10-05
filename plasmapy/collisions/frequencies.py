@@ -4,15 +4,16 @@ import scipy.integrate
 import scipy.misc
 
 from astropy.constants.si import e, eps0, hbar, k_B, m_e
-
-
+from functools import cached_property
 from numbers import Real
 
-from functools import cached_property
 from plasmapy import particles
-from plasmapy.collisions.coulomb import Coulomb_logarithm, Coulomb_cross_section
+from plasmapy.collisions.coulomb import Coulomb_cross_section, Coulomb_logarithm
 from plasmapy.collisions.lengths import impact_parameter_perp
-from plasmapy.collisions.misc import _process_inputs, _replace_nan_velocity_with_thermal_velocity
+from plasmapy.collisions.misc import (
+    _process_inputs,
+    _replace_nan_velocity_with_thermal_velocity,
+)
 from plasmapy.formulary.speeds import thermal_speed
 from plasmapy.utils.decorators import deprecated, validate_quantities
 from plasmapy.utils.exceptions import PhysicsError, PlasmaPyFutureWarning

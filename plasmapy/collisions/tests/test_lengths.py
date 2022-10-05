@@ -4,10 +4,14 @@ import pytest
 from astropy import units as u
 
 from plasmapy.collisions.coulomb import Coulomb_logarithm
-from plasmapy.collisions.lengths import impact_parameter, impact_parameter_perp, mean_free_path
+from plasmapy.collisions.lengths import (
+    impact_parameter,
+    impact_parameter_perp,
+    mean_free_path,
+)
+from plasmapy.utils import exceptions
 from plasmapy.utils.exceptions import CouplingWarning
 from plasmapy.utils.pytest_helpers import assert_can_handle_nparray
-from plasmapy.utils import exceptions
 
 
 class Test_impact_parameter_perp:
