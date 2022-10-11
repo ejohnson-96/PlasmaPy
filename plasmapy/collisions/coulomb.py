@@ -81,11 +81,27 @@ def Coulomb_number(
 
 
     """
+    # Validate arguments
+    for arg_name in ("r", "v", "tc"):
+        val = locals()[arg_name].squeeze()
+        if val.shape != ():
+            raise ValueError(
+                f"Argument '{arg_name}' must a single value and not an "
+                f"array of shape {val.shape}."
+            )
+        locals()[arg_name] = val
+
+    return r, v, tc
 
 
+inputs = {
+    "r": 10*u.m,
+    "v": 50000*u.m/u.s,
+    "tc": 0.1*u.s,
+}
 
-
-    return
+x = Coulomb_number(**inputs)
+print(x)
 
 
 @validate_quantities(

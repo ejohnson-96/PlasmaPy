@@ -8,7 +8,3 @@ __all__ = [""]
 import astropy.units as u
 import numpy as np
 
-
-@validate_quantities(
-
-)

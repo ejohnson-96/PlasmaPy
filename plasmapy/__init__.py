@@ -32,6 +32,7 @@ from importlib.metadata import PackageNotFoundError, version
 
 from plasmapy import (
     analysis,
+    collisions,
     diagnostics,
     dispersion,
     formulary,
