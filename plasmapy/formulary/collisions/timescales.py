@@ -10,56 +10,29 @@ from math import pi as pi, gamma as gamma, factorial as fact
 import astropy.units as u
 
 from astropy.constants.si import eps0
+from scipy.stats import gausshyper as gh
 
 from plasmapy.formulary.collisions import coulomb
 from plasmapy.particles import Particle, ParticleList
 from plasmapy.utils.decorators import validate_quantities
 
 
-def gauss_hyper(
-        a, b, c, d,
-        x, y, z,
-        n,
-):
-    for arg in (a, b, c, d, x, y, z, n):
-        if not isinstance(arg, (int, float)):
-            raise TypeError(
-                f"Argument {arg} is of incorrect type, type int "
-                f"or float required, received type of {type(arg)}."
-            )
-
-    ans = 0
-    for k, l, m in range(n):
-        ans = ans + (poch_sym(a, k + l + m) * poch_sym(b, k + l)) / (
-                poch_sym(c, k + l + m) * poch_sym(d, l)) * ((x ** k) / (fact(k))) * (
-                      (y ** l) / (fact(l))) * ((z ** m) / (fact(m)))
-
-    return ans
-
-
-def poch_sym(
-        a,
-        n,
-):
-    for arg in (a, n):
-        if not isinstance(arg, (int, float)):
-            raise TypeError(
-                f"Argument {arg} is of incorrect type, type int "
-                f"or float required, received type of {type(arg)}."
-            )
-    return gamma(a + n) / gamma(a)
-
 class Hellinger:
 
     def __init__(self):
         self.CoulombCollisionsBiMaxwellian
+        self.LangevinCoulombCollisionsBiMaxwellian
+        self.IonCollisionalTransportCoefficents
         return
 
-    #@validate_quantities(
+    # @validate_quantities(
     #    T={"can_be_negative": False, "equivalencies": u.temperature_energy()},
     #    n_i={"can_be_negative": False},
-    #)
+    # )
+
+    # Hellinger and Trávnícek 2009
     def CoulombCollisionsBiMaxwellian(
+            self,
             T: u.K,
             n_i: u.m ** -3,
             ions: (Particle, Particle),
@@ -142,8 +115,6 @@ class Hellinger:
         <Quantity 1 / s>
         """
 
-
-
         # Validate ions argument
         if not isinstance(ions, (list, tuple, ParticleList)):
             ions = [ions]
@@ -211,17 +182,19 @@ class Hellinger:
                 f"Argument 'n_i' must be an positive argument, received "
                 f"{n_i} of type {type(n_i)}."
             )
-        v_par = np.sqrt((par_speeds[0].value**2 + par_speeds[1].value**2) / 2)
+        v_par = np.sqrt((par_speeds[0].value ** 2 + par_speeds[1].value ** 2) / 2)
 
-        a = ((ions[0].charge.value**2)*(ions[1].charge.value**2)*n_i.value)
+        a = ((ions[0].charge.value ** 2) * (ions[1].charge.value ** 2) * n_i.value)
 
         b = (12 * (pi ** 1.5)) * (ions[0].mass.value * ions[1].mass.value) * (eps0 ** 2) * (v_par ** 3)
 
         c = coulomb.Coulomb_logarithm(T, n_i, ions)
 
-        return ((a / b.value ) * c) / u.s
+        return ((a / b.value) * c) / u.s
 
-    def hellinger_2010(
+    # Hellinger and Trávnícek 2010
+    def LangevinCoulombCollisionsBiMaxwellian(
+            self,
             T_par: u.K,
             T_perp: u.K,
             n_i: u.m ** -3,
@@ -231,15 +204,20 @@ class Hellinger:
 
         # Validate t_par and t_perp
 
-        T = (2 * T_perp + T_par) / 3
 
-        return Hellinger.CoulombCollisionsBiMaxwellian(T, n_i, ions, par_speeds) * 2 / 5 * gauss_hyper(2, 1.5, 7 / 2, )
+        if T_par == 0:
+            raise ValueError(
+                f""
+            )
+        else:
+            return Hellinger.CoulombCollisionsBiMaxwellian(T, n_i, ions, par_speeds) * 2 / 5 * gh(a=2, b=1.5, c=7 / 2, x=(1 - (T_perp / T_par)))
 
+    # Hellinger 2016
+    def IonCollisionalTransportCoefficents(
+            self,
+    ):
 
-
-
-
-
+        return
 
 
 class USSR:
@@ -252,7 +230,7 @@ class USSR:
                 "divide by zero error. Please try again"
             )
         else:
-            return (5/8) * np.sqrt((particle.mass*(T_i**3)) / pi) * (1 / ((particle.charge ** 4) * n_i * c))
+            return (5 / 8) * np.sqrt((particle.mass * (T_i ** 3)) / pi) * (1 / ((particle.charge ** 4) * n_i * c))
 
     def ts_ee(self, T_e: u.K, n_e: u.m ** -3):
         return USSR.ts_ii(T_e, n_e, Particle("e-"))
@@ -267,15 +245,15 @@ class USSR:
                 "divide by zero error. Please try again"
             )
         else:
-            return (3/8) * ((particle.mass*T_i + e.mass*T_e)**(1.5))/(np.sqrt(2*pi*e.mass*particle.mass))/((e.charge**2)*(particle.charge**2)*c*(n_i + n_e))
-
+            return (3 / 8) * ((particle.mass * T_i + e.mass * T_e) ** (1.5)) / (
+                np.sqrt(2 * pi * e.mass * particle.mass)) / ((e.charge ** 2) * (particle.charge ** 2) * c * (n_i + n_e))
 
 
 inpts = {
     "T": 1000 * u.K,
     "n_i": 100 * u.m ** -3,
     "ions": (Particle('p'), Particle('He++')),
-    "par_speeds": [3 * u.m/u.s, 6 * u.m/u.s]
+    "par_speeds": [3 * u.m / u.s, 6 * u.m / u.s]
 }
 
 arg = inpts['par_speeds']
@@ -284,10 +262,6 @@ for i in arg:
     print(f"Instance of {i} of type {type(i)}.")
     print(f"Instance has unit of {i.unit}.")
 
-x = Hellinger.CoulombCollisionsBiMaxwellian(**inpts)
+H = Hellinger()
+x = H.CoulombCollisionsBiMaxwellian(**inpts)
 print(x)
-
-
-
-
-

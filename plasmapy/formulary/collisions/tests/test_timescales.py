@@ -44,4 +44,7 @@ class TestTimescales:
     )
     def test_raises(self, kwargs, _error):
         with pytest.raises(_error):
-            ts.hellinger_2009(**kwargs)
+            H = ts.Hellinger()
+            H.CoulombCollisionsBiMaxwellian(**kwargs)
+            H.LangevinCoulombCollisionsBiMaxwellian(**kwargs)
+
