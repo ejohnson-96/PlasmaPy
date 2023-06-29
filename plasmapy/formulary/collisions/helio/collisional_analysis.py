@@ -662,10 +662,10 @@ def diff_flow(
 
             dv = dv + d_dv
 
-            if alfven:
-                return dv / v_a
-            else:
-                return dv
+        if alfven:
+            return dv / v_a
+        else:
+            return dv
 
     variables = [r_0, r_n, n_1, n_2, v_1, T_1, T_2, B]
 
@@ -693,7 +693,43 @@ def diff_flow(
             n_step,
         )
     else:
-        print("dsfsd")
+        try:
+            all(len(variables[0]) == len(z) for z in variables[1:])
+            res = []
+            for i in range(len(variables[0])):
+                res.append(
+                    df_eq(
+                        r_0[i],
+                        r_n[i],
+                        n_1[i],
+                        n_2[i],
+                        T_1[i],
+                        T_2[i],
+                        v_1[i],
+                        v_2[i],
+                        ions,
+                        B[i],
+                        density_scale,
+                        velocity_scale,
+                        temperature_scale,
+                        magnetic_scale,
+                        alfven,
+                        n_step,
+                    )
+                )
+                if verbose:
+                    logging.info(f"\r {(i / len(variables[0])) * 100:.2f} %")
+
+            return res  # noqa: TRY300
+
+        except Exception as e:  # noqa: BLE001
+            raise ValueError(
+                "Argument(s) are of unequal lengths, the following "
+                "arguments should be of equal length: 'r_0', 'r_n', "
+                "'n_1', 'n_2', 'v_1', 'v_2', 'T_1', 'T_2'. and 'B'."
+            ) from e
+
+
 
 
 
