@@ -372,7 +372,7 @@ def temp_ratio(  # noqa: C901, PLR0912, PLR0915
             ) from e
 
 
-def diff_flow(  # noqa: C901, PLR0912, PLR0915
+def diff_flow( # noqa: C901, PLR0912, PLR0915
     *,
     r_0: u.au,
     r_n: u.au,
@@ -517,7 +517,8 @@ def diff_flow(  # noqa: C901, PLR0912, PLR0915
 
     .. math::
 
-        \tau_{SD} = \frac{3m_{a}^{2}m_{b}^{2} \left( \frac{k_{B}T_{a}}{m_{a}} + \frac{k_{B}T_{b}}{m_{b}} \right)^{3/2}}{4 \sqrt{2\pi} e^{4} Z^{2}_{a}Z^{2}_{b}(m_{a} + m_{b})(n_{a}m_{a} + n_{b}m_{b}) \lambda_{ab} }
+        \tau_{SD} = \frac{3m_{a}^{2}m_{b}^{2} \left( \frac{k_{B}T_{a}}{m_{a}} + \frac{k_{B}T_{b}}{m_{b}} \right)^{
+        3/2}}{4 \sqrt{2\pi} e^{4} Z^{2}_{a}Z^{2}_{b}(m_{a} + m_{b})(n_{a}m_{a} + n_{b}m_{b}) \lambda_{ab} }
 
     with ...
 
@@ -545,11 +546,6 @@ def diff_flow(  # noqa: C901, PLR0912, PLR0915
 
     the velocity is the streaming velocity of the background particle
     field.
-
-
-
-
-
 
 
 
